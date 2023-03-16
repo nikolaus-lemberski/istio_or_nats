@@ -31,3 +31,12 @@ And the "silent" listener app Service X:
 ```sh
 oc create -f kubernetes/x-deploy.yml
 ```
+
+Now call Service A endpoint:
+
+```sh
+oc get route
+oc curl SERVICE_A_ROUTE
+```
+
+And check the logs of our "audit" application Service X.
