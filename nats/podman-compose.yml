@@ -1,0 +1,43 @@
+version: "3"
+services:
+  nats:
+    image: "nats"
+    container_name: nats-server
+    expose:
+      - "4222"
+    ports:
+      - "8222:8222"
+    networks:
+      - natsprojects
+  service-a:
+    build: ./service-a
+    image: nats-service-a:latest
+    container_name: nats-service-a
+    ports:
+      - "3000:8080"
+    networks:
+      - natsprojects
+    environment:
+      PORT: 8080
+      NATS_SERVICE: nats://nats:4222
+  service-b-1: &service-b
+    build: ./service-b
+    image: nats-service-b:latest
+    container_name: nats-service-b-1
+    networks:
+      - natsprojects
+    environment:
+      NATS_SERVICE: nats://nats:4222
+  service-b-2:
+    <<: *service-b
+    container_name: nats-service-b-2
+  service-x:
+    build: ./service-x
+    image: nats-service-x:latest
+    container_name: nats-service-x
+    networks:
+      - natsprojects
+    environment:
+      NATS_SERVICE: nats://nats:4222
+networks:
+  natsprojects: {}

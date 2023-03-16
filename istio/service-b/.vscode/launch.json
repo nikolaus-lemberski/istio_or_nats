@@ -1,0 +1,12 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Run app",
+            "request": "launch",
+            "mainClass": "io.vertx.core.Launcher",
+            "args": "run com.lemberski.istio.serviceb.MainVerticle"
+        }
+    ]
+}

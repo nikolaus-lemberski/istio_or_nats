@@ -1,0 +1,64 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: istio-service-x
+  name: istio-service-x
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: istio-service-x
+  template:
+    metadata:
+      labels:
+        app: istio-service-x
+      annotations:
+        sidecar.istio.io/inject: "true"
+    spec:
+      containers:
+        - name: istio-service-x
+          image: quay.io/nlembers/istio/istio-service-x:1.0
+          imagePullPolicy: Always
+          env:
+            - name: PORT
+              value: "8080"
+          ports:
+            - containerPort: 8080
+              name: http
+              protocol: TCP
+          securityContext:
+            privileged: false
+            allowPrivilegeEscalation: false
+            runAsNonRoot: true
+            capabilities:
+              drop: ["ALL"]
+            seccompProfile:
+              type: RuntimeDefault
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 5
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 5
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: istio-service-x
+  name: istio-service-x
+spec:
+  ports:
+    - name: http
+      port: 8080
+  selector:
+    app: istio-service-x
+  

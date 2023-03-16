@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: nats-service-b
+  name: nats-service-b
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: nats-service-b
+  template:
+    metadata:
+      labels:
+        app: nats-service-b
+    spec:
+      containers:
+        - name: nats-service-b
+          image: quay.io/nlembers/nats/nats-service-b:1.0
+          imagePullPolicy: Always
+          env:
+            - name: NATS_SERVICE
+              value: "nats://nats:4222"
+          securityContext:
+            privileged: false
+            allowPrivilegeEscalation: false
+            runAsNonRoot: true
+            capabilities:
+              drop: ["ALL"]
+            seccompProfile:
+              type: RuntimeDefault

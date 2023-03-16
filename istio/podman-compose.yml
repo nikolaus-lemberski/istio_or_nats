@@ -1,0 +1,36 @@
+version: "3"
+services:
+  service-a:
+    build: ./service-a
+    image: istio-service-a:latest
+    container_name: istio-service-a
+    ports:
+      - "3000:8080"
+    networks:
+      - istioprojects
+    environment:
+      PORT: 8080
+      SERVICE_B_HOST: service-b
+      SERVICE_B_PORT: 8080
+  service-b:
+    build: ./service-b
+    image: istio-service-b:latest
+    container_name: istio-service-b
+    ports:
+      - "3001:8080"
+    networks:
+      - istioprojects
+    environment:
+      PORT: 8080
+  service-x:
+    build: ./service-x
+    image: istio-service-x:latest
+    container_name: istio-service-x
+    ports:
+      - "3002:8080"
+    networks:
+      - istioprojects
+    environment:
+      PORT: 8080
+networks:
+  istioprojects: {}

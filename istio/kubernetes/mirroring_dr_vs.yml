@@ -1,0 +1,34 @@
+apiVersion: networking.istio.io/v1beta1
+kind: DestinationRule
+metadata:
+  name: istio-service-b
+spec:
+  host: istio-service-b
+
+---
+
+apiVersion: networking.istio.io/v1beta1
+kind: DestinationRule
+metadata:
+  name: istio-service-x
+spec:
+  host: istio-service-x
+
+---
+
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: istio-service-b
+spec:
+  hosts:
+    - istio-service-b
+  http:
+  - route:
+    - destination:
+        host: istio-service-b
+      weight: 100
+    mirror:
+      host: istio-service-x
+    mirrorPercentage:
+      value: 100.0
